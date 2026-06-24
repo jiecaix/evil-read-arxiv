@@ -8,7 +8,6 @@
 3. PDF直接提取的图片（最后备选）
 """
 
-import fitz  # PyMuPDF
 import os
 import json
 import sys
@@ -17,9 +16,19 @@ import shutil
 import tarfile
 import tempfile
 import logging
+import argparse
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
+
+
+def require_fitz():
+    try:
+        import fitz  # PyMuPDF
+    except ImportError:
+        logger.error("PyMuPDF is required. Install the CLI with: uv tool install -e .")
+        raise
+    return fitz
 
 try:
     import requests
@@ -127,6 +136,7 @@ def extract_pdf_figures(pdf_path, output_dir, min_width=200, min_height=200, min
         min_bytes: 最小文件大小（字节），过滤小碎片
     """
     print("从PDF直接提取图片（备选方案）...")
+    fitz = require_fitz()
 
     try:
         pdf_doc = fitz.open(pdf_path)
@@ -195,6 +205,7 @@ def extract_from_pdf_figures(figures_pdf, output_dir):
     print(f"从PDF图片文件提取: {os.path.basename(figures_pdf)}")
 
     extracted = []
+    fitz = require_fitz()
     doc = fitz.open(figures_pdf)
     filename = os.path.splitext(os.path.basename(figures_pdf))[0]
 
@@ -226,16 +237,15 @@ def main():
         stream=sys.stderr,
     )
 
-    if len(sys.argv) < 4:
-        print("Usage: python extract_images.py <paper_id> <output_dir> <index_file>")
-        print("  paper_id: arXiv ID (如: 2510.24701) 或本地PDF路径")
-        print("  output_dir: 输出目录")
-        print("  index_file: 索引文件路径")
-        sys.exit(1)
+    parser = argparse.ArgumentParser(description="Extract paper images from arXiv source packages or PDFs")
+    parser.add_argument("paper_input", help="arXiv ID (如: 2510.24701) 或本地PDF路径")
+    parser.add_argument("output_dir", help="输出目录")
+    parser.add_argument("index_file", help="索引文件路径")
+    args = parser.parse_args()
 
-    paper_input = sys.argv[1]
-    output_dir = sys.argv[2]
-    index_file = sys.argv[3]
+    paper_input = args.paper_input
+    output_dir = args.output_dir
+    index_file = args.index_file
 
     os.makedirs(output_dir, exist_ok=True)
 

@@ -1,24 +1,13 @@
 #!/usr/bin/env python3
-import arxiv
 import os
 import time
-import requests
-import urllib.parse
 import re
-import yaml
 import logging
 from pathlib import Path
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 logger = logging.getLogger(__name__)
-
-# Try to import PyMed
-try:
-    from pymed import PubMed
-except ImportError:
-    logger.warning("PyMed not installed. PubMed hunting disabled. Run 'pip install pymed'")
-    PubMed = None
 
 def load_config():
     # Try to find config.yaml in the root directory
@@ -30,6 +19,12 @@ def load_config():
         logger.error(f"Config file not found at {config_path}")
         return {}
         
+    try:
+        import yaml
+    except ImportError:
+        logger.error("PyYAML is required. Install the CLI with: uv tool install -e .")
+        return {}
+
     with open(config_path, "r", encoding="utf-8") as f:
         return yaml.safe_load(f) or {}
 
@@ -88,14 +83,21 @@ def save_paper(paper_data: dict):
     
     downloaded = False
     if paper_data.get('pdf_url') and not pdf_path.exists():
-        logger.info(f"Downloading PDF from {paper_data['source']}: {paper_data['title'][:50]}...")
         try:
-            r = requests.get(paper_data['pdf_url'], timeout=30)
-            if r.status_code == 200 and b'%PDF' in r.content[:100]:
-                pdf_path.write_bytes(r.content)
-                downloaded = True
-        except Exception as e:
-            logger.error(f"Download failed: {e}")
+            import requests
+        except ImportError:
+            logger.error("requests is required to download PDFs. Install the CLI with: uv tool install -e .")
+            requests = None
+
+        logger.info(f"Downloading PDF from {paper_data['source']}: {paper_data['title'][:50]}...")
+        if requests:
+            try:
+                r = requests.get(paper_data['pdf_url'], timeout=30)
+                if r.status_code == 200 and b'%PDF' in r.content[:100]:
+                    pdf_path.write_bytes(r.content)
+                    downloaded = True
+            except Exception as e:
+                logger.error(f"Download failed: {e}")
 
     # Generate Markdown content
     metadata = {
@@ -133,6 +135,12 @@ def save_paper(paper_data: dict):
 
 def hunt_arxiv(query: str, max_results: int):
     """Fetch from arXiv"""
+    try:
+        import arxiv
+    except ImportError:
+        logger.error("arxiv is required. Install the CLI with: uv tool install -e .")
+        return 0
+
     logger.info(f"Hunting on arXiv for: {query[:50]}...")
     client = arxiv.Client(page_size=max_results, delay_seconds=3, num_retries=3)
     search = arxiv.Search(query=query, max_results=max_results, sort_by=arxiv.SortCriterion.SubmittedDate)
@@ -154,7 +162,12 @@ def hunt_arxiv(query: str, max_results: int):
 
 def hunt_pubmed(query: str, max_results: int):
     """Fetch from PubMed"""
-    if not PubMed: return 0
+    try:
+        from pymed import PubMed
+    except ImportError:
+        logger.warning("PyMed not installed. PubMed hunting disabled. Install the CLI with: uv tool install -e .")
+        return 0
+
     logger.info(f"Hunting on PubMed for: {query[:50]}...")
     pubmed = PubMed(tool="Evil Arxiv Hunter", email=CONFIG.get("pubmed_email", "user@example.com"))
     

@@ -46,7 +46,7 @@ You are the Paper Image Extractor for OrbitOS.
 如果源码包不可用或未找到足够图片，回退到从PDF中提取：
 
 ```bash
-python "scripts/extract_images.py" \
+evil-read-arxiv extract-images \
   "[PAPER_ID or PDF_PATH]" \
   "$OBSIDIAN_VAULT_PATH/20_Research/Papers/[DOMAIN]/[PAPER_TITLE]/images" \
   "$OBSIDIAN_VAULT_PATH/20_Research/Papers/[DOMAIN]/[PAPER_TITLE]/images/index.md"

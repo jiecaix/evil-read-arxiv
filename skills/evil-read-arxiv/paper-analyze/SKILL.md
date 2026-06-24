@@ -259,7 +259,7 @@ INDEX_PATH="${IMAGES_DIR}/index.md"
 
 ```bash
 # 调用外部脚本生成笔记
-python "scripts/generate_note.py" --paper-id "[PAPER_ID]" --title "[论文标题]" --authors "[作者]" --domain "[领域]" --language "$LANGUAGE"
+evil-read-arxiv generate-note --paper-id "[PAPER_ID]" --title "[论文标题]" --authors "[作者]" --domain "[领域]" --language "$LANGUAGE"
 ```
 
 ### 4.3 使用obsidian-markdown skill生成最终笔记
@@ -279,7 +279,7 @@ cat "$GRAPH_PATH" 2>/dev/null || echo "{}"
 
 ```bash
 # 调用外部脚本更新知识图谱
-python "scripts/update_graph.py" --paper-id "[PAPER_ID]" --title "[论文标题]" --domain "[领域]" --score [评分] --language "$LANGUAGE"
+evil-read-arxiv update-graph --paper-id "[PAPER_ID]" --title "[论文标题]" --domain "[领域]" --score [评分] --language "$LANGUAGE"
 ```
 
 ## 步骤4：生成综合论文笔记
@@ -552,13 +552,13 @@ cat /tmp/paper_analysis/{1-introduction,2-joint-optimization,3-agent-swarm,5-eva
 #### 步骤4：生成笔记
 ```bash
 # 使用外部脚本生成笔记
-python "scripts/generate_note.py" --paper-id "$PAPER_ID" --title "$TITLE" --authors "$AUTHORS" --domain "$DOMAIN" --language "$LANGUAGE"
+evil-read-arxiv generate-note --paper-id "$PAPER_ID" --title "$TITLE" --authors "$AUTHORS" --domain "$DOMAIN" --language "$LANGUAGE"
 ```
 
 #### 步骤5：更新图谱
 ```bash
 # 使用外部脚本更新知识图谱
-python "scripts/update_graph.py" --paper-id "$PAPER_ID" --title "$TITLE" --domain "$DOMAIN" --score 8.8 --language "$LANGUAGE"
+evil-read-arxiv update-graph --paper-id "$PAPER_ID" --title "$TITLE" --domain "$DOMAIN" --score 8.8 --language "$LANGUAGE"
 ```
 
 #### 步骤6：使用obsidian-markdown skill修复格式
@@ -1015,7 +1015,7 @@ AUTHORS="${3:-Kimi Team}"
 DOMAIN="${4:-其他}"
 
 # 执行完整流程
-python "scripts/generate_note.py" --paper-id "$PAPER_ID" --title "$TITLE" --authors "$AUTHORS" --domain "$DOMAIN" --language "$LANGUAGE" --language "$LANGUAGE" || \
+evil-read-arxiv generate-note --paper-id "$PAPER_ID" --title "$TITLE" --authors "$AUTHORS" --domain "$DOMAIN" --language "$LANGUAGE" --language "$LANGUAGE" || \
     echo "笔记生成脚本执行失败"
 
 # 提取图片
@@ -1056,13 +1056,13 @@ cat /tmp/paper_analysis/{1-introduction,2-joint-optimization,3-agent-swarm,5-eva
 #### 步骤4：生成笔记
 ```bash
 # 使用外部脚本生成笔记
-python "scripts/generate_note.py" --paper-id "$PAPER_ID" --title "$TITLE" --authors "$AUTHORS" --domain "$DOMAIN" --language "$LANGUAGE"
+evil-read-arxiv generate-note --paper-id "$PAPER_ID" --title "$TITLE" --authors "$AUTHORS" --domain "$DOMAIN" --language "$LANGUAGE"
 ```
 
 #### 步骤5：更新图谱
 ```bash
 # 使用外部脚本更新知识图谱
-python "scripts/update_graph.py" --paper-id "$PAPER_ID" --title "$TITLE" --domain "$DOMAIN" --score 8.8 --language "$LANGUAGE"
+evil-read-arxiv update-graph --paper-id "$PAPER_ID" --title "$TITLE" --domain "$DOMAIN" --score 8.8 --language "$LANGUAGE"
 ```
 
 #### 步骤6：使用obsidian-markdown skill修复格式

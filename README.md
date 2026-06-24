@@ -76,41 +76,54 @@
 ### 前置要求
 
 1. **Claude Code CLI** - 需要安装并配置 Claude Code（CLI 技能所需）
-2. **Python 3.8+** - 用于运行搜索和分析脚本
+2. **uv + Python 3.9+** - 用于隔离安装 `evil-read-arxiv` CLI
 3. **Node.js 20+** - Web 应用所需
 4. **Anthropic API Key** - Web 应用的 AI 功能所需（Claude）
-5. **Python 依赖**：
+5. **Python CLI（隔离依赖）**：
    ```bash
-   pip install -r requirements.txt
+   # 本地开发
+   uv tool install -e .
+
+   # 从 Git 仓库安装
+   uv tool install git+https://github.com/<owner>/evil-read-arxiv.git
    ```
 
 ### 安装步骤
 
-#### 方式一：CLI 技能安装
+#### 方式一：CLI skills 安装
 
-将技能复制到 Claude Code skills 目录：
+本仓库的 canonical skill 布局为：
 
-```bash
-# Windows PowerShell
-Copy-Item -Recurse evil-read-arxiv\start-my-day $env:USERPROFILE\.claude\skills\
-Copy-Item -Recurse evil-read-arxiv\paper-analyze $env:USERPROFILE\.claude\skills\
-Copy-Item -Recurse evil-read-arxiv\extract-paper-images $env:USERPROFILE\.claude\skills\
-Copy-Item -Recurse evil-read-arxiv\paper-search $env:USERPROFILE\.claude\skills\
-
-# macOS/Linux
-cp -r evil-read-arxiv/start-my-day ~/.claude/skills/
-cp -r evil-read-arxiv/paper-analyze ~/.claude/skills/
-cp -r evil-read-arxiv/extract-paper-images ~/.claude/skills/
-cp -r evil-read-arxiv/paper-search ~/.claude/skills/
+```text
+skills/evil-read-arxiv/<skill-name>/SKILL.md
 ```
 
-配置环境变量和路径（见下文"配置"部分），然后重启 Claude Code CLI。
+使用 cc-switch：
+
+```bash
+cc-switch skills repos add <repo-url>
+cc-switch skills discover evil-read-arxiv
+cc-switch skills install start-my-day
+cc-switch skills install paper-analyze
+cc-switch skills install extract-paper-images
+cc-switch skills install paper-search
+cc-switch skills install conf-papers
+```
+
+手动安装时，只复制需要的单个 skill：
+
+```bash
+cp -r skills/evil-read-arxiv/start-my-day ~/.claude/skills/
+cp -r skills/evil-read-arxiv/paper-analyze ~/.claude/skills/
+```
+
+配置环境变量和路径（见下文"配置"部分），然后重启对应 CLI。
 
 #### 方式二：Web 应用安装
 
 ```bash
 # 1. 安装 Python 依赖（项目根目录）
-pip install -r requirements.txt
+uv tool install -e .
 
 # 2. 安装 Node 依赖
 cd web
@@ -225,10 +238,10 @@ cp config.yaml "$OBSIDIAN_VAULT_PATH/99_System/Config/research_interests.yaml"
 如果不想设置环境变量，也可以在每次调用脚本时通过参数指定路径：
 
 ```bash
-python scripts/search_arxiv.py --config "/your/path/research_interests.yaml"
-python scripts/scan_existing_notes.py --vault "/your/obsidian/vault"
-python scripts/generate_note.py --vault "/your/obsidian/vault" --paper-id "2402.12345" --title "Paper Title" --authors "Author" --domain "大模型"
-python scripts/update_graph.py --vault "/your/obsidian/vault" --paper-id "2402.12345" --title "Paper Title" --domain "大模型"
+evil-read-arxiv search-arxiv --config "/your/path/research_interests.yaml"
+evil-read-arxiv scan-notes --vault "/your/obsidian/vault"
+evil-read-arxiv generate-note --vault "/your/obsidian/vault" --paper-id "2402.12345" --title "Paper Title" --authors "Author" --domain "大模型"
+evil-read-arxiv update-graph --vault "/your/obsidian/vault" --paper-id "2402.12345" --title "Paper Title" --domain "大模型"
 ```
 
 ### 路径格式说明
@@ -314,29 +327,16 @@ evil-read-arxiv/
 ├── README.md                 # 本文件
 ├── QUICKSTART.md             # 快速开始指南
 ├── config.example.yaml       # 配置模板（需要复制并修改）
-├── requirements.txt          # Python 依赖
-├── start-my-day/             # 每日推荐技能
-│   ├── SKILL.md              # 技能定义文件
-│   └── scripts/
-│       ├── search_arxiv.py   # arXiv/Semantic Scholar 搜索脚本
-│       ├── scan_existing_notes.py  # 扫描现有笔记
-│       └── link_keywords.py  # 关键词自动链接脚本
-├── paper-analyze/            # 论文分析技能
-│   ├── SKILL.md
-│   └── scripts/
-│       ├── generate_note.py  # 生成笔记模板
-│       └── update_graph.py   # 更新知识图谱
-├── extract-paper-images/     # 图片提取技能
-│   ├── SKILL.md
-│   └── scripts/
-│       └── extract_images.py # 图片提取脚本
-├── paper-search/             # 论文搜索技能
-│   └── SKILL.md
-├── conf-papers/              # 顶会论文搜索推荐技能
-│   ├── SKILL.md              # 技能定义文件
-│   ├── conf-papers.yaml      # 独立配置（关键词、会议、年份）
-│   └── scripts/
-│       └── search_conf_papers.py  # DBLP搜索 + S2补充 + 评分
+├── pyproject.toml            # uv tool / Python CLI 包配置
+├── requirements.txt          # 兼容旧流程的 Python 依赖列表
+├── evil_read_arxiv/          # `evil-read-arxiv` CLI 包
+├── skills/
+│   └── evil-read-arxiv/
+│       ├── start-my-day/             # 每日推荐 skill
+│       ├── paper-analyze/            # 论文分析 skill
+│       ├── extract-paper-images/     # 图片提取 skill
+│       ├── paper-search/             # 论文搜索 skill
+│       └── conf-papers/              # 顶会论文搜索推荐 skill
 └── web/                      # Web 应用（Next.js 16）
     ├── README.md             # Web 英文文档
     ├── README.zh.md          # Web 中文文档
@@ -387,11 +387,11 @@ A: 检查以下几点：
 
 ### Q: 图片提取失败？
 A:
-1. 确保安装了 PyMuPDF：`pip install PyMuPDF`
+1. 确保安装了 PyMuPDF：`uv tool install -e .`
 2. 检查 arXiv ID 格式是否正确（如 2602.12345）
 
 ### Q: 关键词自动链接不准确？
-A: 可以在 `start-my-day/scripts/link_keywords.py` 中修改 `COMMON_WORDS` 集合，添加你不需要自动链接的词
+A: 可以在 `skills/evil-read-arxiv/start-my-day/scripts/link_keywords.py` 中修改 `COMMON_WORDS` 集合，添加你不需要自动链接的词
 
 ### Q: "Papers directory not found" 错误？
 A:
@@ -405,23 +405,23 @@ A: 设置 `OBSIDIAN_VAULT_PATH` 环境变量，或在调用脚本时通过 `--va
 
 ### 修改搜索的 arXiv 分类
 
-在调用 `search_arxiv.py` 时通过 `--categories` 参数指定：
+在调用 `evil-read-arxiv search-arxiv` 时通过 `--categories` 参数指定：
 
 ```bash
-python scripts/search_arxiv.py --categories "cs.AI,cs.LG,cs.CL,cs.CV"
+evil-read-arxiv search-arxiv --categories "cs.AI,cs.LG,cs.CL,cs.CV"
 ```
 
 ### 修改每天推荐的论文数量
 
-在调用 `search_arxiv.py` 时通过 `--top-n` 参数指定：
+在调用 `evil-read-arxiv search-arxiv` 时通过 `--top-n` 参数指定：
 
 ```bash
-python scripts/search_arxiv.py --top-n 15
+evil-read-arxiv search-arxiv --top-n 15
 ```
 
 ### 修改评分权重
 
-在 `start-my-day/scripts/search_arxiv.py` 的 `calculate_recommendation_score` 函数中调整权重。
+在 `skills/evil-read-arxiv/start-my-day/scripts/search_arxiv.py` 的 `calculate_recommendation_score` 函数中调整权重。
 
 ## 工作原理
 

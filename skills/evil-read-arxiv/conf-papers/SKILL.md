@@ -53,8 +53,7 @@ top_n: 10                    # 返回论文数量
 复用 `start-my-day` 的扫描脚本：
 
 ```bash
-cd "$SKILL_DIR/../start-my-day"
-python scripts/scan_existing_notes.py \
+evil-read-arxiv scan-notes \
   --vault "$OBSIDIAN_VAULT_PATH" \
   --output "$SKILL_DIR/existing_notes_index.json"
 ```
@@ -64,8 +63,7 @@ python scripts/scan_existing_notes.py \
 使用 `scripts/search_conf_papers.py` 完成搜索、补充和评分：
 
 ```bash
-cd "$SKILL_DIR"
-python scripts/search_conf_papers.py \
+evil-read-arxiv search-conf-papers \
   --config "$SKILL_DIR/conf-papers.yaml" \
   --output conf_papers_filtered.json \
   --year {年份} \
@@ -307,8 +305,7 @@ cat conf_papers_filtered.json
 复用 `start-my-day` 的关键词链接脚本：
 
 ```bash
-cd "$SKILL_DIR/../start-my-day"
-python scripts/link_keywords.py \
+evil-read-arxiv link-keywords \
   --index "$SKILL_DIR/existing_notes_index.json" \
   --input "$OBSIDIAN_VAULT_PATH/10_Daily/{年份}_顶会论文推荐.md" \
   --output "$OBSIDIAN_VAULT_PATH/10_Daily/{年份}_顶会论文推荐.md"
@@ -377,16 +374,14 @@ python scripts/link_keywords.py \
 
 2. **扫描现有笔记构建索引**
    ```bash
-   cd "$SKILL_DIR/../start-my-day"
-   python scripts/scan_existing_notes.py \
+      evil-read-arxiv scan-notes \
      --vault "$OBSIDIAN_VAULT_PATH" \
      --output "$SKILL_DIR/existing_notes_index.json"
    ```
 
 3. **搜索和筛选顶会论文**
    ```bash
-   cd "$SKILL_DIR"
-   python scripts/search_conf_papers.py \
+      evil-read-arxiv search-conf-papers \
      --config "$SKILL_DIR/conf-papers.yaml" \
      --output conf_papers_filtered.json \
      --year {年份} \

@@ -1,0 +1,12 @@
+{
+  "name": "evil-read-arxiv",
+  "displayName": "Evil Read Arxiv",
+  "description": "Paper reading workflow skills for arXiv, conference discovery, analysis, image extraction, and Obsidian notes.",
+  "skills": [
+    "evil-read-arxiv/start-my-day",
+    "evil-read-arxiv/paper-analyze",
+    "evil-read-arxiv/extract-paper-images",
+    "evil-read-arxiv/paper-search",
+    "evil-read-arxiv/conf-papers"
+  ]
+}

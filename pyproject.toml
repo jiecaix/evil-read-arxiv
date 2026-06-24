@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "evil-read-arxiv"
+version = "2.1.0"
+description = "Individually installable paper-reading skills with a uv tool-friendly CLI."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+  "PyYAML>=6.0",
+  "requests>=2.28.0",
+  "PyMuPDF>=1.23.0",
+  "arxiv",
+  "pymed",
+]
+
+[project.scripts]
+evil-read-arxiv = "evil_read_arxiv.cli:main"
+
+[tool.setuptools]
+packages = ["evil_read_arxiv"]
+include-package-data = true
+
+[tool.setuptools.package-data]
+evil_read_arxiv = [
+  "skills/evil-read-arxiv/*/SKILL.md",
+  "skills/evil-read-arxiv/*/scripts/*.py",
+  "skills/evil-read-arxiv/conf-papers/conf-papers.yaml",
+]
