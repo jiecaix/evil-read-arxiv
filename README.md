@@ -392,7 +392,7 @@ A:
 2. 检查 arXiv ID 格式是否正确（如 2602.12345）
 
 ### Q: 关键词自动链接不准确？
-A: 可以在 `skills/evil-read-arxiv/start-my-day/scripts/link_keywords.py` 中修改 `COMMON_WORDS` 集合，添加你不需要自动链接的词
+A: 可以在 `evil_read_arxiv/commands/start_my_day/common_words.py` 中修改 `COMMON_WORDS` 集合，添加你不需要自动链接的词
 
 ### Q: "Papers directory not found" 错误？
 A:
@@ -422,7 +422,7 @@ evil-read-arxiv search-arxiv --top-n 15
 
 ### 修改评分权重
 
-在 `skills/evil-read-arxiv/start-my-day/scripts/search_arxiv.py` 的 `calculate_recommendation_score` 函数中调整权重。
+在 `evil_read_arxiv/commands/start_my_day/search_arxiv.py` 的 `calculate_recommendation_score` 函数中调整权重。
 
 ## 工作原理
 

@@ -28,7 +28,7 @@ fi
 ```
 
 Then use this language setting throughout the workflow:
-- When generating notes, pass `--language $LANGUAGE` to scripts
+- When generating notes, pass `--language $LANGUAGE` to CLI commands
 - Generate content in the appropriate language
 
 ---
@@ -305,7 +305,7 @@ tags:
 #   "Visual Agentic" → "Visual-Agentic"
 #   "MoonViT-3D" → "MoonViT-Three-D"
 #
-# Python脚本(scripts/generate_note.py)会自动处理标签名中的空格
+# `evil-read-arxiv generate-note` 会自动处理标签名中的空格
 # 将所有tag.replace(' ', '-')移除空格
   - [相关论文1]    ← 在tags中添加相关论文
   - [相关论文2]    ← 在tags中添加相关论文

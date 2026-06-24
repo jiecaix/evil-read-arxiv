@@ -11,18 +11,9 @@ import argparse
 import logging
 from datetime import datetime
 
+from ...paths import get_vault_path
+
 logger = logging.getLogger(__name__)
-
-
-def get_vault_path(cli_vault=None):
-    """从CLI参数或环境变量获取vault路径"""
-    if cli_vault:
-        return cli_vault
-    env_path = os.environ.get('OBSIDIAN_VAULT_PATH')
-    if env_path:
-        return env_path
-    logger.error("未指定 vault 路径。请通过 --vault 参数或 OBSIDIAN_VAULT_PATH 环境变量设置。")
-    sys.exit(1)
 
 
 def main():

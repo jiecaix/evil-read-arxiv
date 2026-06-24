@@ -60,7 +60,7 @@ evil-read-arxiv scan-notes \
 
 ## 步骤3：搜索顶会论文
 
-使用 `scripts/search_conf_papers.py` 完成搜索、补充和评分：
+使用 `evil-read-arxiv search-conf-papers` 完成搜索、补充和评分：
 
 ```bash
 evil-read-arxiv search-conf-papers \
@@ -70,7 +70,7 @@ evil-read-arxiv search-conf-papers \
   --conferences "{会议列表，逗号分隔}"
 ```
 
-> 注意：`--config` 默认指向 skill 目录下的 `conf-papers.yaml`，通常不需要手动指定。`--year` 和 `--conferences` 未指定时使用配置文件中的默认值。
+> 注意：在 skill 中始终显式传入 `--config "$SKILL_DIR/conf-papers.yaml"`。`--year` 和 `--conferences` 未指定时使用配置文件中的默认值。
 
 **脚本工作流**：
 1. **DBLP 搜索**：调用 DBLP API 获取指定会议和年份的全部论文

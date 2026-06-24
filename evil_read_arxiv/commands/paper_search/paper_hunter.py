@@ -222,10 +222,15 @@ def hunt_papers(source: str = "all", max_results: int = 5):
 
     logger.info(f"Success! Hunted {total} new papers.")
 
-if __name__ == "__main__":
+
+def main():
     import argparse
     parser = argparse.ArgumentParser(description="Multi-source paper hunter for arXiv and PubMed")
     parser.add_argument("--source", default="all", help="arxiv, pubmed, or all")
     parser.add_argument("--max_results", type=int, default=5, help="Number of papers per source")
     args = parser.parse_args()
     hunt_papers(source=args.source, max_results=args.max_results)
+
+
+if __name__ == "__main__":
+    main()

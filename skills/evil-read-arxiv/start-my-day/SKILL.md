@@ -41,7 +41,7 @@ fi
 ```
 
 Then use this language setting throughout the workflow:
-- When generating notes, pass `--language $LANGUAGE` to scripts
+- When generating notes, pass `--language $LANGUAGE` to CLI commands
 - Use appropriate section headers in the generated notes
 
 ---
@@ -77,7 +77,7 @@ Then use this language setting throughout the workflow:
 搜索所有相关分类的最近论文：
 
 1. **搜索范围**
-   - 使用 `scripts/search_arxiv.py` 搜索 arXiv
+   - 使用 `evil-read-arxiv search-arxiv` 搜索 arXiv
    - 查询：所有研究相关的 arXiv 分类
    - 按提交日期排序
    - 限制结果：200篇
@@ -89,7 +89,7 @@ Then use this language setting throughout the workflow:
 
 ### 2.2 执行搜索和筛选
 
-使用 `scripts/search_arxiv.py` 脚本完成搜索、解析和筛选：
+使用 `evil-read-arxiv search-arxiv` 完成搜索、解析和筛选：
 
 ```bash
 # 使用 Python 脚本搜索、解析和筛选 arXiv 论文
@@ -594,7 +594,7 @@ evil-read-arxiv link-keywords \
 
 ### search_arxiv.py
 
-位于 `scripts/search_arxiv.py`，功能包括：
+`evil-read-arxiv search-arxiv` 功能包括：
 
 1. **搜索 arXiv**：调用 arXiv API 获取论文
 2. **解析 XML**：提取论文信息（ID、标题、作者、摘要等）
@@ -604,7 +604,7 @@ evil-read-arxiv link-keywords \
 
 ### scan_existing_notes.py
 
-位于 `scripts/scan_existing_notes.py`，功能包括：
+`evil-read-arxiv scan-notes` 功能包括：
 
 1. **扫描笔记目录**：扫描 `20_Research/Papers/` 下所有 `.md` 文件
 2. **提取笔记信息**：
@@ -644,7 +644,7 @@ evil-read-arxiv scan-notes \
 
 ### link_keywords.py
 
-位于 `scripts/link_keywords.py`，功能包括：
+`evil-read-arxiv link-keywords` 功能包括：
 
 1. **读取文本**：读取需要处理的文本内容
 2. **读取笔记索引**：从 `existing_notes_index.json` 加载笔记映射

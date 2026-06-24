@@ -1,44 +1,37 @@
-"""Unified command dispatcher for the skill helper scripts."""
+"""Unified command dispatcher for evil-read-arxiv."""
 
 from __future__ import annotations
 
 import argparse
-import runpy
 import sys
-from pathlib import Path
+from collections.abc import Callable
+
+from evil_read_arxiv.commands.conf_papers.search_conf_papers import main as search_conf_papers
+from evil_read_arxiv.commands.extract_paper_images.extract_images import main as extract_images
+from evil_read_arxiv.commands.paper_analyze.generate_note import main as generate_note
+from evil_read_arxiv.commands.paper_analyze.update_graph import main as update_graph
+from evil_read_arxiv.commands.paper_search.paper_hunter import main as hunt_papers
+from evil_read_arxiv.commands.start_my_day.link_keywords import main as link_keywords
+from evil_read_arxiv.commands.start_my_day.scan_existing_notes import main as scan_notes
+from evil_read_arxiv.commands.start_my_day.search_arxiv import main as search_arxiv
 
 
-PACKAGE_ROOT = Path(__file__).resolve().parent
-REPO_ROOT = PACKAGE_ROOT.parent
-REPO_SKILL_ROOT = REPO_ROOT / "skills" / "evil-read-arxiv"
-INSTALLED_SKILL_ROOT = Path(sys.prefix) / "skills" / "evil-read-arxiv"
-
-
-def find_skill_root() -> Path:
-    for skill_root in (REPO_SKILL_ROOT, INSTALLED_SKILL_ROOT):
-        if skill_root.exists():
-            return skill_root
-    return REPO_SKILL_ROOT
-
-
-SKILL_ROOT = find_skill_root()
-
-COMMANDS = {
-    "search-arxiv": SKILL_ROOT / "start-my-day" / "scripts" / "search_arxiv.py",
-    "scan-notes": SKILL_ROOT / "start-my-day" / "scripts" / "scan_existing_notes.py",
-    "link-keywords": SKILL_ROOT / "start-my-day" / "scripts" / "link_keywords.py",
-    "generate-note": SKILL_ROOT / "paper-analyze" / "scripts" / "generate_note.py",
-    "update-graph": SKILL_ROOT / "paper-analyze" / "scripts" / "update_graph.py",
-    "extract-images": SKILL_ROOT / "extract-paper-images" / "scripts" / "extract_images.py",
-    "search-conf-papers": SKILL_ROOT / "conf-papers" / "scripts" / "search_conf_papers.py",
-    "hunt-papers": SKILL_ROOT / "paper-search" / "scripts" / "paper_hunter.py",
+COMMANDS: dict[str, Callable[[], int | None]] = {
+    "search-arxiv": search_arxiv,
+    "scan-notes": scan_notes,
+    "link-keywords": link_keywords,
+    "generate-note": generate_note,
+    "update-graph": update_graph,
+    "extract-images": extract_images,
+    "search-conf-papers": search_conf_papers,
+    "hunt-papers": hunt_papers,
 }
 
 
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="evil-read-arxiv",
-        description="Run helper scripts bundled with the evil-read-arxiv skills.",
+        description="Run evil-read-arxiv helper commands.",
     )
     parser.add_argument(
         "command",
@@ -52,11 +45,7 @@ def main(argv: list[str] | None = None) -> int:
     args = list(sys.argv[1:] if argv is None else argv)
     parser = _build_parser()
 
-    if not args:
-        parser.print_help()
-        return 0
-
-    if args[0] in {"-h", "--help"}:
+    if not args or args[0] in {"-h", "--help"}:
         parser.print_help()
         return 0
 
@@ -64,23 +53,13 @@ def main(argv: list[str] | None = None) -> int:
     if command not in COMMANDS:
         parser.error(f"unknown command: {command}")
 
-    script_path = COMMANDS[command]
-    if not script_path.exists():
-        parser.exit(1, f"Script not found for command '{command}': {script_path}\n")
-
-    script_dir = str(script_path.parent)
     old_argv = sys.argv[:]
-    old_path = sys.path[:]
     try:
-        sys.argv = [str(script_path), *args[1:]]
-        if script_dir not in sys.path:
-            sys.path.insert(0, script_dir)
-        runpy.run_path(str(script_path), run_name="__main__")
+        sys.argv = [f"evil-read-arxiv {command}", *args[1:]]
+        result = COMMANDS[command]()
+        return int(result or 0)
     finally:
         sys.argv = old_argv
-        sys.path = old_path
-
-    return 0
 
 
 if __name__ == "__main__":

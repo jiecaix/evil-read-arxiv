@@ -16,34 +16,8 @@ from typing import List, Dict, Optional, Tuple
 import urllib.request
 import urllib.parse
 
-logger = logging.getLogger(__name__)
-
-
-def title_to_note_filename(title: str) -> str:
-    """将论文标题转换为 Obsidian 笔记文件名（与 generate_note.py 保持一致）。
-
-    使用与 paper-analyze/scripts/generate_note.py 完全相同的规则，
-    确保 conf-papers 生成的 wikilink 路径能正确指向 paper-analyze 创建的文件。
-    """
-    filename = re.sub(r'[ /\\:*?"<>|]+', '_', title).strip('_')
-    return filename
-
-try:
-    import requests
-    HAS_REQUESTS = True
-except ImportError:
-    HAS_REQUESTS = False
-    logger.warning("requests library not found, using urllib")
-
-# ---------------------------------------------------------------------------
-# 复用 search_arxiv.py 的评分函数
-# ---------------------------------------------------------------------------
-_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-_START_MY_DAY_SCRIPTS = os.path.join(os.path.dirname(os.path.dirname(_SCRIPT_DIR)), 'start-my-day', 'scripts')
-if _START_MY_DAY_SCRIPTS not in sys.path:
-    sys.path.insert(0, _START_MY_DAY_SCRIPTS)
-
-from search_arxiv import (
+from ...text import title_to_filename
+from ..start_my_day.search_arxiv import (
     calculate_relevance_score,
     calculate_quality_score,
     SCORE_MAX,
@@ -52,6 +26,15 @@ from search_arxiv import (
     RELEVANCE_CATEGORY_MATCH_BOOST,
     S2_RATE_LIMIT_WAIT,
 )
+
+logger = logging.getLogger(__name__)
+
+try:
+    import requests
+    HAS_REQUESTS = True
+except ImportError:
+    HAS_REQUESTS = False
+    logger.warning("requests library not found, using urllib")
 
 # ---------------------------------------------------------------------------
 # 会议配置
@@ -619,12 +602,9 @@ def filter_and_score_papers(papers: List[Dict], cp_config: Dict, top_n: int = 10
 # ---------------------------------------------------------------------------
 
 def main():
-    # 默认配置路径：脚本所在 skill 目录下的 conf-papers.yaml
-    default_config = os.path.join(os.path.dirname(_SCRIPT_DIR), 'conf-papers.yaml')
-
     parser = argparse.ArgumentParser(description='Search top conference papers via DBLP + Semantic Scholar')
     parser.add_argument('--config', type=str,
-                        default=default_config,
+                        default='conf-papers.yaml',
                         help='Path to conf-papers.yaml config file')
     parser.add_argument('--output', type=str, default='conf_papers_filtered.json',
                         help='Output JSON file path')
@@ -768,7 +748,7 @@ def main():
         p.pop('summary', None)  # 保留 abstract，去掉重复的 summary
         # 为每篇论文补充 note_filename，与 generate_note.py 的文件名规则保持一致
         # 这样 conf-papers 生成的 wikilink 可以直接使用此字段，无需自行推断
-        p['note_filename'] = title_to_note_filename(p.get('title', ''))
+        p['note_filename'] = title_to_filename(p.get('title', ''))
 
     # 准备输出
     output = {

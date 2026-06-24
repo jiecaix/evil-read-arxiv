@@ -6,6 +6,7 @@ arXiv + Semantic Scholar 混合架构论文搜索脚本
 
 import xml.etree.ElementTree as ET
 import json
+import os
 import sys
 import time
 import logging
