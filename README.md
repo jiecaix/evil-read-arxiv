@@ -117,6 +117,8 @@ cp -r skills/evil-read-arxiv/start-my-day ~/.claude/skills/
 cp -r skills/evil-read-arxiv/paper-analyze ~/.claude/skills/
 ```
 
+仓库根目录下的 `skills/evil-read-arxiv` 是唯一的 skill 源；安装器会从这里读取，不需要再维护 `evil_read_arxiv/skills` 这类副本。
+
 配置环境变量和路径（见下文"配置"部分），然后重启对应 CLI。
 
 #### 方式二：Web 应用安装
@@ -328,7 +330,6 @@ evil-read-arxiv/
 ├── QUICKSTART.md             # 快速开始指南
 ├── config.example.yaml       # 配置模板（需要复制并修改）
 ├── pyproject.toml            # uv tool / Python CLI 包配置
-├── requirements.txt          # 兼容旧流程的 Python 依赖列表
 ├── evil_read_arxiv/          # `evil-read-arxiv` CLI 包
 ├── skills/
 │   └── evil-read-arxiv/

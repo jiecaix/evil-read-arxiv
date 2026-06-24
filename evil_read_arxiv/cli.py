@@ -1,4 +1,4 @@
-"""Unified command dispatcher for the bundled skill scripts."""
+"""Unified command dispatcher for the skill helper scripts."""
 
 from __future__ import annotations
 
@@ -10,9 +10,18 @@ from pathlib import Path
 
 PACKAGE_ROOT = Path(__file__).resolve().parent
 REPO_ROOT = PACKAGE_ROOT.parent
-PACKAGED_SKILL_ROOT = PACKAGE_ROOT / "skills" / "evil-read-arxiv"
 REPO_SKILL_ROOT = REPO_ROOT / "skills" / "evil-read-arxiv"
-SKILL_ROOT = PACKAGED_SKILL_ROOT if PACKAGED_SKILL_ROOT.exists() else REPO_SKILL_ROOT
+INSTALLED_SKILL_ROOT = Path(sys.prefix) / "skills" / "evil-read-arxiv"
+
+
+def find_skill_root() -> Path:
+    for skill_root in (REPO_SKILL_ROOT, INSTALLED_SKILL_ROOT):
+        if skill_root.exists():
+            return skill_root
+    return REPO_SKILL_ROOT
+
+
+SKILL_ROOT = find_skill_root()
 
 COMMANDS = {
     "search-arxiv": SKILL_ROOT / "start-my-day" / "scripts" / "search_arxiv.py",

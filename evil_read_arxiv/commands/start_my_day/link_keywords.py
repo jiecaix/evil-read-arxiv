@@ -11,7 +11,7 @@ import argparse
 import logging
 from typing import Dict, List, Set, Tuple
 
-from common_words import COMMON_WORDS
+from .common_words import COMMON_WORDS
 
 logger = logging.getLogger(__name__)
 

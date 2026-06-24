@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import List, Dict, Set, Tuple
 import yaml
 
-from common_words import COMMON_WORDS
+from .common_words import COMMON_WORDS
 
 logger = logging.getLogger(__name__)
 

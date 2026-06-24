@@ -21,11 +21,27 @@ evil-read-arxiv = "evil_read_arxiv.cli:main"
 
 [tool.setuptools]
 packages = ["evil_read_arxiv"]
-include-package-data = true
 
-[tool.setuptools.package-data]
-evil_read_arxiv = [
-  "skills/evil-read-arxiv/*/SKILL.md",
-  "skills/evil-read-arxiv/*/scripts/*.py",
+[tool.setuptools.data-files]
+"skills" = ["skills/manifest.json"]
+"skills/evil-read-arxiv/start-my-day" = ["skills/evil-read-arxiv/start-my-day/SKILL.md"]
+"skills/evil-read-arxiv/start-my-day/scripts" = [
+  "skills/evil-read-arxiv/start-my-day/scripts/common_words.py",
+  "skills/evil-read-arxiv/start-my-day/scripts/link_keywords.py",
+  "skills/evil-read-arxiv/start-my-day/scripts/scan_existing_notes.py",
+  "skills/evil-read-arxiv/start-my-day/scripts/search_arxiv.py",
+]
+"skills/evil-read-arxiv/paper-analyze" = ["skills/evil-read-arxiv/paper-analyze/SKILL.md"]
+"skills/evil-read-arxiv/paper-analyze/scripts" = [
+  "skills/evil-read-arxiv/paper-analyze/scripts/generate_note.py",
+  "skills/evil-read-arxiv/paper-analyze/scripts/update_graph.py",
+]
+"skills/evil-read-arxiv/extract-paper-images" = ["skills/evil-read-arxiv/extract-paper-images/SKILL.md"]
+"skills/evil-read-arxiv/extract-paper-images/scripts" = ["skills/evil-read-arxiv/extract-paper-images/scripts/extract_images.py"]
+"skills/evil-read-arxiv/paper-search" = ["skills/evil-read-arxiv/paper-search/SKILL.md"]
+"skills/evil-read-arxiv/paper-search/scripts" = ["skills/evil-read-arxiv/paper-search/scripts/paper_hunter.py"]
+"skills/evil-read-arxiv/conf-papers" = [
+  "skills/evil-read-arxiv/conf-papers/SKILL.md",
   "skills/evil-read-arxiv/conf-papers/conf-papers.yaml",
 ]
+"skills/evil-read-arxiv/conf-papers/scripts" = ["skills/evil-read-arxiv/conf-papers/scripts/search_conf_papers.py"]

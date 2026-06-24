@@ -6,28 +6,16 @@ arXiv + Semantic Scholar 混合架构论文搜索脚本
 
 import xml.etree.ElementTree as ET
 import json
-import re
-import os
 import sys
 import time
 import logging
 from datetime import datetime, timedelta
 from typing import List, Dict, Set, Optional, Tuple
-from pathlib import Path
 import urllib.request
 import urllib.parse
+from ...text import title_to_filename
 
 logger = logging.getLogger(__name__)
-
-
-def title_to_note_filename(title: str) -> str:
-    """将论文标题转换为 Obsidian 笔记文件名（与 generate_note.py 保持一致）。
-
-    使用与 paper-analyze/scripts/generate_note.py 完全相同的规则，
-    确保 start-my-day 生成的 wikilink 路径能正确指向 paper-analyze 创建的文件。
-    """
-    filename = re.sub(r'[ /\\:*?"<>|]+', '_', title).strip('_')
-    return filename
 
 try:
     import requests
@@ -1159,7 +1147,7 @@ def main():
     # 为每篇论文补充 note_filename，与 generate_note.py 的文件名规则保持一致
     # 这样 start-my-day 生成的 wikilink 可以直接使用此字段，无需自行推断
     for paper in top_papers:
-        paper['note_filename'] = title_to_note_filename(paper.get('title', ''))
+        paper['note_filename'] = title_to_filename(paper.get('title', ''))
 
     # 准备输出
     output = {

@@ -47,6 +47,8 @@ cp -r skills/evil-read-arxiv/start-my-day ~/.claude/skills/
 cp -r skills/evil-read-arxiv/paper-analyze ~/.claude/skills/
 ```
 
+`skills/evil-read-arxiv` 是唯一的 skill 源目录；CLI 安装时会把这份目录作为资源安装，不需要维护第二份脚本。
+
 ## 第三步：配置 Obsidian Vault
 
 设置 `OBSIDIAN_VAULT_PATH` 环境变量：
