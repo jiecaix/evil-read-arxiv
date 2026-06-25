@@ -73,20 +73,16 @@ A standalone Next.js 16 web application for visual paper browsing. See [web/READ
 
 #### Option A: CLI Skills Installation
 
-Copy skills to your Claude Code skills directory:
+Copy the skill package to your Claude Code skills directory. The installed layout should be `skills/evil-read-arxiv/<skill-name>`:
 
 ```bash
 # Windows PowerShell
-Copy-Item -Recurse evil-read-arxiv\start-my-day $env:USERPROFILE\.claude\skills\
-Copy-Item -Recurse evil-read-arxiv\paper-analyze $env:USERPROFILE\.claude\skills\
-Copy-Item -Recurse evil-read-arxiv\extract-paper-images $env:USERPROFILE\.claude\skills\
-Copy-Item -Recurse evil-read-arxiv\paper-search $env:USERPROFILE\.claude\skills\
+New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude\skills" | Out-Null
+Copy-Item -Recurse evil-read-arxiv\skills\evil-read-arxiv "$env:USERPROFILE\.claude\skills\"
 
 # macOS/Linux
-cp -r evil-read-arxiv/start-my-day ~/.claude/skills/
-cp -r evil-read-arxiv/paper-analyze ~/.claude/skills/
-cp -r evil-read-arxiv/extract-paper-images ~/.claude/skills/
-cp -r evil-read-arxiv/paper-search ~/.claude/skills/
+mkdir -p ~/.claude/skills
+cp -r evil-read-arxiv/skills/evil-read-arxiv ~/.claude/skills/
 ```
 
 Configure environment variables and paths (see "Configuration" below), then restart Claude Code CLI.
@@ -304,28 +300,30 @@ evil-read-arxiv/
 ├── QUICKSTART.md             # Quick start guide
 ├── config.example.yaml       # Config template
 ├── requirements.txt          # Python dependencies
-├── start-my-day/             # Daily recommendation skill
-│   ├── SKILL.md              # Skill definition
-│   └── scripts/
-│       ├── search_arxiv.py   # arXiv/Semantic Scholar search script
-│       ├── scan_existing_notes.py  # Scan existing notes
-│       └── link_keywords.py  # Auto keyword linking script
-├── paper-analyze/            # Paper analysis skill
-│   ├── SKILL.md
-│   └── scripts/
-│       ├── generate_note.py  # Generate note template
-│       └── update_graph.py   # Update knowledge graph
-├── extract-paper-images/      # Image extraction skill
-│   ├── SKILL.md
-│   └── scripts/
-│       └── extract_images.py # Image extraction script
-├── paper-search/             # Paper search skill
-│   └── SKILL.md
-├── conf-papers/              # Conference paper search skill
-│   ├── SKILL.md              # Skill definition
-│   ├── conf-papers.yaml      # Config (keywords, conferences, year)
-│   └── scripts/
-│       └── search_conf_papers.py  # DBLP search + S2 enrichment + scoring
+├── skills/
+│   └── evil-read-arxiv/      # Skill package
+│       ├── start-my-day/     # Daily recommendation skill
+│       │   ├── SKILL.md      # Skill definition
+│       │   └── scripts/
+│       │       ├── search_arxiv.py   # arXiv/Semantic Scholar search script
+│       │       ├── scan_existing_notes.py  # Scan existing notes
+│       │       └── link_keywords.py  # Auto keyword linking script
+│       ├── paper-analyze/    # Paper analysis skill
+│       │   ├── SKILL.md
+│       │   └── scripts/
+│       │       ├── generate_note.py  # Generate note template
+│       │       └── update_graph.py   # Update knowledge graph
+│       ├── extract-paper-images/     # Image extraction skill
+│       │   ├── SKILL.md
+│       │   └── scripts/
+│       │       └── extract_images.py # Image extraction script
+│       ├── paper-search/     # Paper search skill
+│       │   └── SKILL.md
+│       └── conf-papers/      # Conference paper search skill
+│           ├── SKILL.md      # Skill definition
+│           ├── conf-papers.yaml      # Config (keywords, conferences, year)
+│           └── scripts/
+│               └── search_conf_papers.py  # DBLP search + S2 enrichment + scoring
 └── web/                      # Web app (Next.js 16)
     ├── README.md             # Web English docs
     ├── README.zh.md          # Web Chinese docs
@@ -380,7 +378,7 @@ A:
 2. Check if arXiv ID format is correct (e.g., 2602.12345)
 
 ### Q: Auto keyword linking not accurate?
-A: You can modify the `COMMON_WORDS` set in `start-my-day/scripts/link_keywords.py` to add words you don't want auto-linked
+A: You can modify the `COMMON_WORDS` set in `skills/evil-read-arxiv/start-my-day/scripts/link_keywords.py` to add words you don't want auto-linked
 
 ### Q: "Papers directory not found" error?
 A:
@@ -410,7 +408,7 @@ python scripts/search_arxiv.py --top-n 15
 
 ### Modify Scoring Weights
 
-Adjust weights in the `calculate_recommendation_score` function in `start-my-day/scripts/search_arxiv.py`.
+Adjust weights in the `calculate_recommendation_score` function in `skills/evil-read-arxiv/start-my-day/scripts/search_arxiv.py`.
 
 ## How It Works
 

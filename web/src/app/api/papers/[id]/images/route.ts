@@ -10,9 +10,17 @@ const execAsync = promisify(exec);
 const PROJECT_ROOT = path.join(process.cwd(), "..");
 const SCRIPT_PATH = path.join(
   PROJECT_ROOT,
+  "skills",
+  "evil-read-arxiv",
   "extract-paper-images",
   "scripts",
   "extract_images.py"
+);
+const SKILL_DIR = path.join(
+  PROJECT_ROOT,
+  "skills",
+  "evil-read-arxiv",
+  "extract-paper-images"
 );
 
 export async function GET(
@@ -35,7 +43,7 @@ export async function GET(
     try {
       await execAsync(
         `python3 "${SCRIPT_PATH}" "${arxivId}" "${imagesDir}" "${indexFile}"`,
-        { timeout: 120000, cwd: PROJECT_ROOT }
+        { timeout: 120000, cwd: SKILL_DIR }
       );
     } catch (err) {
       console.error("Image extraction failed:", err);

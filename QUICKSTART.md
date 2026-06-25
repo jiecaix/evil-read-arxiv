@@ -58,20 +58,16 @@ Copy-Item config.yaml "$env:OBSIDIAN_VAULT_PATH\99_System\Config\research_intere
 
 ### 2.4 将技能安装到 Claude Code
 
-将 evil-read-arxiv 目录中的四个技能文件夹复制到你的 Claude Code skills 目录：
+将 evil-read-arxiv 的技能包复制到你的 Claude Code skills 目录。安装后的结构应为 `skills/evil-read-arxiv/<skill-name>`：
 
 ```bash
 # macOS/Linux
-cp -r evil-read-arxiv/start-my-day ~/.claude/skills/
-cp -r evil-read-arxiv/paper-analyze ~/.claude/skills/
-cp -r evil-read-arxiv/extract-paper-images ~/.claude/skills/
-cp -r evil-read-arxiv/paper-search ~/.claude/skills/
+mkdir -p ~/.claude/skills
+cp -r evil-read-arxiv/skills/evil-read-arxiv ~/.claude/skills/
 
 # Windows PowerShell
-Copy-Item -Recurse evil-read-arxiv\start-my-day $env:USERPROFILE\.claude\skills\
-Copy-Item -Recurse evil-read-arxiv\paper-analyze $env:USERPROFILE\.claude\skills\
-Copy-Item -Recurse evil-read-arxiv\extract-paper-images $env:USERPROFILE\.claude\skills\
-Copy-Item -Recurse evil-read-arxiv\paper-search $env:USERPROFILE\.claude\skills\
+New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude\skills" | Out-Null
+Copy-Item -Recurse evil-read-arxiv\skills\evil-read-arxiv "$env:USERPROFILE\.claude\skills\"
 ```
 
 ## 第三步：创建 Obsidian 目录结构
@@ -154,7 +150,7 @@ paper-analyze 2602.12345
 
 ### 问题：关键词自动链接不准确
 
-**解决**：编辑 `start-my-day/scripts/link_keywords.py` 中的 `COMMON_WORDS` 集合，添加你不需要自动链接的词。
+**解决**：编辑 `skills/evil-read-arxiv/start-my-day/scripts/link_keywords.py` 中的 `COMMON_WORDS` 集合，添加你不需要自动链接的词。
 
 ## 需要帮助？
 

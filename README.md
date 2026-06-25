@@ -88,20 +88,16 @@
 
 #### 方式一：CLI 技能安装
 
-将技能复制到 Claude Code skills 目录：
+将技能包复制到 Claude Code skills 目录。安装后的结构应为 `skills/evil-read-arxiv/<skill-name>`：
 
 ```bash
 # Windows PowerShell
-Copy-Item -Recurse evil-read-arxiv\start-my-day $env:USERPROFILE\.claude\skills\
-Copy-Item -Recurse evil-read-arxiv\paper-analyze $env:USERPROFILE\.claude\skills\
-Copy-Item -Recurse evil-read-arxiv\extract-paper-images $env:USERPROFILE\.claude\skills\
-Copy-Item -Recurse evil-read-arxiv\paper-search $env:USERPROFILE\.claude\skills\
+New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude\skills" | Out-Null
+Copy-Item -Recurse evil-read-arxiv\skills\evil-read-arxiv "$env:USERPROFILE\.claude\skills\"
 
 # macOS/Linux
-cp -r evil-read-arxiv/start-my-day ~/.claude/skills/
-cp -r evil-read-arxiv/paper-analyze ~/.claude/skills/
-cp -r evil-read-arxiv/extract-paper-images ~/.claude/skills/
-cp -r evil-read-arxiv/paper-search ~/.claude/skills/
+mkdir -p ~/.claude/skills
+cp -r evil-read-arxiv/skills/evil-read-arxiv ~/.claude/skills/
 ```
 
 配置环境变量和路径（见下文"配置"部分），然后重启 Claude Code CLI。
@@ -315,28 +311,30 @@ evil-read-arxiv/
 ├── QUICKSTART.md             # 快速开始指南
 ├── config.example.yaml       # 配置模板（需要复制并修改）
 ├── requirements.txt          # Python 依赖
-├── start-my-day/             # 每日推荐技能
-│   ├── SKILL.md              # 技能定义文件
-│   └── scripts/
-│       ├── search_arxiv.py   # arXiv/Semantic Scholar 搜索脚本
-│       ├── scan_existing_notes.py  # 扫描现有笔记
-│       └── link_keywords.py  # 关键词自动链接脚本
-├── paper-analyze/            # 论文分析技能
-│   ├── SKILL.md
-│   └── scripts/
-│       ├── generate_note.py  # 生成笔记模板
-│       └── update_graph.py   # 更新知识图谱
-├── extract-paper-images/     # 图片提取技能
-│   ├── SKILL.md
-│   └── scripts/
-│       └── extract_images.py # 图片提取脚本
-├── paper-search/             # 论文搜索技能
-│   └── SKILL.md
-├── conf-papers/              # 顶会论文搜索推荐技能
-│   ├── SKILL.md              # 技能定义文件
-│   ├── conf-papers.yaml      # 独立配置（关键词、会议、年份）
-│   └── scripts/
-│       └── search_conf_papers.py  # DBLP搜索 + S2补充 + 评分
+├── skills/
+│   └── evil-read-arxiv/      # 技能包
+│       ├── start-my-day/     # 每日推荐技能
+│       │   ├── SKILL.md      # 技能定义文件
+│       │   └── scripts/
+│       │       ├── search_arxiv.py   # arXiv/Semantic Scholar 搜索脚本
+│       │       ├── scan_existing_notes.py  # 扫描现有笔记
+│       │       └── link_keywords.py  # 关键词自动链接脚本
+│       ├── paper-analyze/    # 论文分析技能
+│       │   ├── SKILL.md
+│       │   └── scripts/
+│       │       ├── generate_note.py  # 生成笔记模板
+│       │       └── update_graph.py   # 更新知识图谱
+│       ├── extract-paper-images/     # 图片提取技能
+│       │   ├── SKILL.md
+│       │   └── scripts/
+│       │       └── extract_images.py # 图片提取脚本
+│       ├── paper-search/     # 论文搜索技能
+│       │   └── SKILL.md
+│       └── conf-papers/      # 顶会论文搜索推荐技能
+│           ├── SKILL.md      # 技能定义文件
+│           ├── conf-papers.yaml      # 独立配置（关键词、会议、年份）
+│           └── scripts/
+│               └── search_conf_papers.py  # DBLP搜索 + S2补充 + 评分
 └── web/                      # Web 应用（Next.js 16）
     ├── README.md             # Web 英文文档
     ├── README.zh.md          # Web 中文文档
@@ -391,7 +389,7 @@ A:
 2. 检查 arXiv ID 格式是否正确（如 2602.12345）
 
 ### Q: 关键词自动链接不准确？
-A: 可以在 `start-my-day/scripts/link_keywords.py` 中修改 `COMMON_WORDS` 集合，添加你不需要自动链接的词
+A: 可以在 `skills/evil-read-arxiv/start-my-day/scripts/link_keywords.py` 中修改 `COMMON_WORDS` 集合，添加你不需要自动链接的词
 
 ### Q: "Papers directory not found" 错误？
 A:
@@ -421,7 +419,7 @@ python scripts/search_arxiv.py --top-n 15
 
 ### 修改评分权重
 
-在 `start-my-day/scripts/search_arxiv.py` 的 `calculate_recommendation_score` 函数中调整权重。
+在 `skills/evil-read-arxiv/start-my-day/scripts/search_arxiv.py` 的 `calculate_recommendation_score` 函数中调整权重。
 
 ## 工作原理
 

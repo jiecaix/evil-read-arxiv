@@ -7,9 +7,18 @@ const execAsync = promisify(exec);
 const PROJECT_ROOT = path.join(process.cwd(), "..");
 const SCRIPT_PATH = path.join(
   PROJECT_ROOT,
+  "skills",
+  "evil-read-arxiv",
   "start-my-day",
   "scripts",
   "search_arxiv.py"
+);
+
+const SKILL_DIR = path.join(
+  PROJECT_ROOT,
+  "skills",
+  "evil-read-arxiv",
+  "start-my-day"
 );
 
 interface ArxivScriptOutput {
@@ -100,7 +109,7 @@ export async function searchPapers(
 
   try {
     const { stdout } = await execAsync(cmd, {
-      cwd: path.join(PROJECT_ROOT, "start-my-day"),
+      cwd: SKILL_DIR,
       timeout: 180000,
       env: { ...process.env, PYTHONIOENCODING: "utf-8" },
     });
@@ -120,7 +129,7 @@ export async function searchPapers(
     const fallbackCmd = fallbackArgs.map(a => a.includes(" ") ? `"${a}"` : a).join(" ");
     try {
       const { stdout } = await execAsync(fallbackCmd, {
-        cwd: path.join(PROJECT_ROOT, "start-my-day"),
+        cwd: SKILL_DIR,
         timeout: 60000,
         env: { ...process.env, PYTHONIOENCODING: "utf-8" },
       });
